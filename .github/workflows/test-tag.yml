@@ -1,7 +1,7 @@
 name: Test tag
 on:
   push:
-    tags: trigger-tag
+    tags: tag
 concurrency: ${{ github.workflow }}
 jobs:
   test-tag:
@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: get-sha
         run: |
-          sha=$(jq -r .sha trigger-tag.json)
+          sha=$(jq -r .sha tag.json)
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
       - run: |
           shopt -s dotglob nullglob
