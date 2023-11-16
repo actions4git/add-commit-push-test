@@ -4,6 +4,7 @@ on:
 concurrency: ${{ github.workflow }}
 jobs:
   test-pull-request:
+    if: "!github.event.pull_request.head.repo.fork"
     permissions:
       contents: write
     runs-on: ubuntu-latest
