@@ -33,6 +33,9 @@ jobs:
           mv ./* ../temp/
       - uses: actions/checkout@v4
       - run: echo $RANDOM > README.txt
-      - uses: ./../temp
+      - id: main
+        uses: ./../temp
         with:
           commit-message: From test-pull-request
+      - shell: jq -C . {0}
+        run: ${{ toJSON(steps.main.outputs) }}
