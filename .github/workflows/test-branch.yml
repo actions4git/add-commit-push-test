@@ -1,0 +1,37 @@
+name: Test branch
+on:
+  push:
+    branches: "main"
+    paths: trigger-branch.json
+concurrency: ${{ github.workflow }}
+jobs:
+  test-branch:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: get-sha
+        run: |
+          sha=$(jq -r .sha trigger-branch.json)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+      - run: |
+          shopt -s dotglob nullglob
+          rm -rf ./*
+      - uses: actions/checkout@v4
+        with:
+          repository: actions4git/add-commit-push
+          ref: ${{ steps.get-sha.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          shopt -s dotglob nullglob
+          mkdir -p ../temp
+          mv ./* ../temp/
+      - uses: actions/checkout@v4
+      - run: echo $RANDOM > README.txt
+      - uses: ./../temp
