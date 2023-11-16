@@ -2,7 +2,7 @@ name: Test branch
 on:
   push:
     branches: "main"
-    paths: trigger-branch.json
+    paths: branch.json
 concurrency: ${{ github.workflow }}
 jobs:
   test-branch:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: get-sha
         run: |
-          sha=$(jq -r .sha trigger-branch.json)
+          sha=$(jq -r .sha branch.json)
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
       - run: |
           shopt -s dotglob nullglob
